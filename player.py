@@ -1,3 +1,4 @@
+
 import pygame
 from circleshape import CircleShape
 from constants import *
@@ -10,6 +11,7 @@ class Player(CircleShape):
         self.shot_timer = 0
 
     def triangle(self):
+        # Returns the 3 points of the ship triangle based on current rotation
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
         right = pygame.Vector2(0, 1).rotate(self.rotation + 90) * self.radius / 1.5
         a = self.position + forward * self.radius
@@ -26,7 +28,6 @@ class Player(CircleShape):
     def update(self, dt):
         self.shot_timer -= dt
         keys = pygame.key.get_pressed()
-
         if keys[pygame.K_a]:
             self.rotate(-dt)
         if keys[pygame.K_d]:

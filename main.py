@@ -34,11 +34,13 @@ def main():
         font = pygame.font.SysFont(None, 48)
         small_font = pygame.font.SysFont(None, 36)
 
+
         updateable = pygame.sprite.Group()
         drawable = pygame.sprite.Group()
         asteroids = pygame.sprite.Group()
         shots = pygame.sprite.Group()
 
+        # Sprite containers for group management
         Player.containers = (updateable, drawable)
         Asteroid.containers = (asteroids, updateable, drawable)
         AsteroidField.containers = (updateable,)
@@ -60,14 +62,13 @@ def main():
             screen.fill(color="black")
             updateable.update(dt)
 
-            # Check for player collision with asteroids
             player_dead = False
             for a in asteroids:
                 if player.check_collision(a):
                     print("Game Over!")
                     player_dead = True
 
-            # Check for shot collision with asteroids and award points
+            # Award points based on asteroid size; fallback for unexpected radius
             for a in asteroids:
                 for s in shots:
                     if a.check_collision(s):
@@ -78,18 +79,15 @@ def main():
                         elif a.radius == ASTEROID_MIN_RADIUS:
                             score += 30
                         else:
-                            score += 10  # fallback
-
+                            score += 10
                         a.split()
                         s.kill()
 
-            # Handle game over and high score
             if player_dead:
                 if score > high_score:
                     high_score = score
                     save_high_score(high_score)
 
-                # Display Game Over and summary
                 game_over_text = font.render("Game Over!", True, (255, 0, 0))
                 score_text = small_font.render(f"Score: {score}", True, (255, 255, 255))
                 high_score_text = small_font.render(f"High Score: {high_score}", True, (255, 255, 0))
@@ -113,7 +111,7 @@ def main():
                                 waiting = False
                     pygame.time.wait(50)
 
-                running = False  # Break inner game loop to restart
+                running = False
 
             else:
                 for i in drawable:
@@ -125,7 +123,7 @@ def main():
                 screen.blit(high_score_text, (SCREEN_WIDTH - 300, 10))
 
                 pygame.display.flip()
-                dt = clock.tick(144) / 1000
+                dt = clock.tick(60) / 1000
 
 if __name__ == "__main__":
     main()
